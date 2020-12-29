@@ -1,0 +1,34 @@
+---
+title: "Section 1.1 - Getting Started in SAS"
+output: html_document
+---
+
+## Accessing SAS
+
+The best way to access SAS in this course will be via SAS Desktop.
+
+* connect to a remote computer through the UC Lindner virtual lab
+* Lindner labs have SAS Desktop on all computers
+
+An alternative way to access SAS is via SAS University Edition. Details on using this approach can be found 
+
+[here](https://www.sas.com/en_us/software/university-edition.html "SAS University Edition"). 
+
+I have used this in the past, but have not been able to get this working on my laptop recently. Furthermore, there are some procedures I've found to not be available in SAS University. Nonetheless, this is a viable option for most SAS work in this course if you prefer to use this over SAS Desktop via Virtual Lab. 
+
+## SAS Desktop via Virtual Lab
+
+1. If you are off campus, you will need to connect to UC’s VPN first
+    + [Instructions](https://kb.uc.edu/KBArticles/VPN-InstallandUse.aspx "Instructions")
+    + [VPN YouTube Video](https://www.youtube.com/watch?v=wZv0lM9Lr1A&feature=youtu.be "VPN YouTube video")
+2. If you are on campus, you can connect to the Lindner virtual lab through VM Horizon
+    + [Instructions](https://www.uc.edu/about/ucit/services/productivity-students/computer-labs.html "Instructions") (located near the bottom of the page)
+    + [Install VMware YouTube video](https://www.youtube.com/watch?v=e6XdjkoWV38&feature=youtu.be "Install VMware")
+    + [Connect to Virtual Lab YouTube Video](https://www.youtube.com/watch?v=c6vzqOgKTT0&feature=youtu.be "Connect to Virtual Lab")
+3. SAS 9.4 is accessible on the virtual machine
+4. Be sure to save to your I:/ drive or to OneDrive. If you don’t, whatever you save will not be accessible.
+    + OneDrive will always be accessible through [UC email](https://login.uc.edu/idp/profile/SAML2/Redirect/SSO?execution=e2s1 "UC email")
+    + General information on [OneDrive at UC](https://kb.uc.edu/Pages/OneDrive-LandingPage.aspx "OneDrive at UC")
+    + For help with your I:/ drive, go the the Lindner IT Service Desk @ Lindner 211 (the lab)
+
+**Go ahead and access SAS on your laptops.**

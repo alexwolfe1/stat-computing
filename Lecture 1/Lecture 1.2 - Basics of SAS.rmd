@@ -1,0 +1,513 @@
+---
+title: "Lecture 1.2 - Basics of SAS"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+csl: apa.csl  
+---
+
+# 1 SAS Windows
+
+There are typically four windows when using SAS in an integrated development environment (IDE). 
+
+1. **Explore Window**
+    + This is where you can view your SAS libraries, the datasets within these SAS libraries, and other files that are stored on the SAS server or on your local computer. 
+    + The **WORK** library is the default library to where your SAS datasets will be stored
+        + This is a temporary library (i.e. datasets stored here are temporary)
+    + You can also create a permanent SAS library using a [LIBNAME statement](https://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000214133.htm "LIBNAME")
+    
+```{code}
+libname libref 'C:\Users\Alex\Documents\Teaching';
+```
+
+This SAS code creates a library called **libref** using a **LIBNAME** statement. The library corresponds to the **Teaching** folder on my C drive. 
+
+There are a few items worth noting regarding LIBNAME statements:
+
+* The association between a libref and a SAS library lasts only for the duration of the SAS session or until you change the libref or discontinue it with another LIBNAME statement. 
+* The **libref** nickname can range from 1 to 8 characters. 
+    
+2. **Editor Window**
+    + This is the text editor where you actually write and run your SAS code. If you are interested in changing the style of the editor, you can do so via Tools -> Options -> Enhanced Editor. For example, it may be helpful to show line numbers in your editor. This can make collaborating on code easier. <br></br> 
+
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\Editor Window.PNG)\
+    
+The above SAS code creates a dataset with 10 observations using a DATA step and a do loop. We will cover these concepts later in this course. 
+
+3. **Output/Results Window**
+    + This is where SAS datasets you create will be output and where the results of your SAS code will be printed (i.e. output that isn't a dataset). <br></br>
+ 
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\Output Window.PNG)\ 
+    
+After running the above DATA step, a SAS dataset is created. This dataset is shown in the Output window.
+
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\Results Window.PNG)\
+
+After printing the dataset we created, the SAS dataset is printed to the Results window. 
+    
+4. **Log Window**
+    + This is where notes, warnings, and errors from your SAS code are output. 
+    + It's a best practice to always check the log after running your SAS code. <br></br>
+    + In this course, we will use the log in interactive mode. This means the log will not be automatically saved; however, you can manually save the log if desired. 
+    + [SAS documentation on **logs**](https://documentation.sas.com/?cdcId=pgmsascdc&cdcVersion=9.4_3.5&docsetId=lrcon&docsetTarget=n03qoiyzzrrl4in1pfvbqgj7jan8.htm&locale=en "SAS logs")
+    
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\Log Window.PNG)\
+
+Notice that the log provides a few notes on the code we've run. In particular, we see a dataset with 10 rows and two columns was created. We also are told how long this particular code takes to run. This can be very helpful when running long SAS programs, as you can identify which parts of the code take the most time to run. 
+
+# 2 Basics of SAS
+
+## 2.1 Basics of SAS
+
+SAS programs are a combination of **DATA steps** and **procedures (i.e. PROCs)**. 
+
+### 2.1.1 DATA Steps:
+
+* [SAS documentation on **DATA steps**](https://support.sas.com/documentation/cdl/en/basess/58133/HTML/default/viewer.htm#a001290590.htm "SAS DATA steps")
+* **DATA steps** begin with a **DATA statement**
+* The goal of a **DATA step** is to create or modify a SAS dataset with the provided name
+* When a **DATA step** is submitted for execution, it is first checked for syntax and then compiled into machine code
+* One important fact about **DATA steps** is that they are effectively do loops, as SAS datasets are created one row at a time "behind the scenes"
+
+Below is an example of the general syntax of a SAS **DATA step**:
+
+```{code}
+DATA dataset_name; 
+    INPUT variable_names;
+CARDS;
+lines_of_data
+;
+RUN;
+```
+We will look at examples of this during our in-class exercises. 
+
+### 2.1.2 PROCs:
+
+* [Nice documentation on **PROCs** from the University of Wisconsin](http://pages.stat.wisc.edu/~yandell/software/sas/proc.html "SAS PROCs")
+* **PROCs** perform a wide variety of tasks and can be thought of as "pre-canned" routines
+* Tasks include the following (amongst many others):
+    + Data management tasks (i.e. **PROC APPEND**, **PROC IMPORT**, **PROC EXPORT**)
+    + Descriptive statistics (i.e. **PROC UNIVARIATE**, **PROC MEANS**)
+    + Statistical modeling (i.e. **PROC REG**, **PROC LOGISTIC**)
+    + Statistical inference (i.e. **PROC TTEST**)
+* In general, **PROCs** consist of an initial *proc name*, followed by *options* and *sub-phrases* specific to the *proc name*, and finally a **RUN** statement. 
+
+Below is an example of the general syntax of a SAS **PROC**:
+
+```{code}
+PROC proc_name options; 
+    sub_phrases / options;
+RUN;
+```
+
+[Here](http://support.sas.com/documentation/cdl/en/allprodsproc/63875/HTML/default/viewer.htm#a003135046.htm "SAS PROCs") is a list from SAS of all available **PROCs**, including a link to the documentation for each **PROC**.
+
+### 2.1.3 Basic SAS Syntax Notes
+
+* SAS *statements* begin with *keywords*, such as **DATA**, **PROC**, **BY**, **VAR**, and many others
+* SAS *statements* always end with a semicolon (;)
+* SAS is not case sensitive (lower and upper case versions of the same code are equivalent)
+    + Note that this is not the case for many other languages used for statistical computing (R, Python, Julia, Scala, C++, MATLAB, etc.)
+* SAS comments are ignored by the compiler and do not actually execute
+    + Comments are very helpful (and required in this course) for making your code readable to others (classmates, peers, etc.)
+
+Here is an example of two forms of a SAS comment:
+
+```{code}
+/* Version 1 of a comment in SAS */
+* Version 2 of a comment in SAS;
+```
+
+### 2.1.4 DATA Step Example
+
+In the below example, we use a **DATA step** to create a dataset named *returns*. This dataset consists of a single variable named *pct_returns*. Note that this basic example creates the dataset entirely in SAS - we are not reading in the data from some external file (we'll get there shortly).
+
+```{code}
+data returns;
+    input pct_returns;
+cards;
+4.6
+9.8
+-9.3
+-20.4
+36.1
+39.0
+2.1
+;
+run;
+```
+
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\DATA Step_Log.PNG)\
+
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\DATA Step_Output.PNG)\
+
+### 2.1.5 SAS Variables
+
+[SAS variables](https://support.sas.com/documentation/cdl/en/lrcon/62955/HTML/default/viewer.htm#a001103596.htm "SAS Variables") are defined as follows:
+
+*"Containers that you create within a program to store and use character and numeric values. Variables have attributes, such as name and type, that enable you to identify them and that define how they can be used."*
+
+A few comments on SAS variables:
+
+* SAS variables are numeric in type, by default
+* Other common variable types, such as dates, are stored as floating-point numbers
+* Here is a useful [link](https://support.sas.com/documentation/cdl/en/lrcon/62955/HTML/default/viewer.htm#a002200738.htm "SAS dates") on SAS date, time, and datetime values
+    + I use data variables *very often* in practice - we will cover these further, as time allows (likely in Lecture 2)
+* SAS **functions** exist to convert from one type of variable to another
+    + A SAS **function** is typically called within a **DATA step** when creating one variable by operating on another, existing variable in your dataset.
+    + [Here](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000245860.htm "SAS functions") is a link to the many available SAS functions
+    
+Here is another link to [converting between numeric and character variables in SAS](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000245860.htm "Type Conversions"). This is something you will undoubtedly encounter in practice whenever you are working with "real world data". 
+
+Let's practice converting from a character variable to a numeric variable:
+
+```{code}
+data returns;
+    input returns_char $; /* the trailing $ tells SAS this is a character variable */
+cards;
+4.6
+9.8
+-9.3
+-20.4
+36.1
+39.0
+2.1
+;
+run;
+
+/* we will modify the same dataset name */
+data returns;
+    set returns;
+    returns_num = input(returns_char, 8.2);
+run;
+```
+
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\Type Conversions_Log.PNG)\
+
+![""](C:\Users\Alex\Documents\Teaching\Statistical Computing\Spring 2020 1H\rmd\Lecture 1\Type Conversions_Output.PNG)\
+
+## 2.2 SAS DATA Step Statements
+
+### 2.2.1 SET Statements
+
+The **SET** statement is used to reference observations from one or more existing SAS datasets in a **DATA** step. [Here](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000173782.htm "Set Statements") is a link to the SAS documentation on **SET** statements.
+
+Let's revisit the returns dataset we created. Now, we will create a new dataset, *returns_numeric*, where we will use the *returns* dataset and convert the character variable to numeric. 
+
+```{code}
+data returns;
+    input returns_char $; /* the trailing $ tells SAS this is a character variable */
+cards;
+4.6
+9.8
+-9.3
+-20.4
+36.1
+39.0
+2.1
+;
+run;
+
+/* reference the returns dataset and modify the variable type in the new dataset */
+data returns_numeric;
+    set returns;
+    returns_num = input(returns_char, 8.2);
+run;
+```
+
+In the above example, note that the *returns* dataset still exists. The **SET** statement does not modify the existing SAS dataset (unless the same dataset name is specified in the **DATA** step, in which case you are overwriting the original dataset). 
+
+### 2.2.2 WHERE Option in DATA Steps
+
+Often times you will need to filter your data to observations that meet one or many criteria. The **WHERE** option selects observations that meet specific criteria prior to bringing the observations into the DATA step or PROC for processing. [Here](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000131192.htm "WHERE Option") is SAS documentation on the **WHERE** option.
+
+In the below example, we create a SAS dataset containing an indicator variable, *rain*, that indicates whether or not it was raining when the temperature was measured. Next, we use a **WHERE** option within a **DATA** step to create a second dataset containing only observations where it rained. Two alternative approaches are shown.
+
+```{code}
+data weather;
+     input rain temp;
+cards;
+1 35
+1 38
+0 49
+1 83
+0 83
+1 25
+1 45
+0 93
+0 43
+1 24
+0 87
+0 76
+1 34
+1 38
+. 39
+0 4
+;
+run;
+
+/* let's create a new dataset for days that rained */
+data rainy_days;
+     set weather (where=(rain = 1));
+run;
+
+/* or we could do this */
+data rainy_days_v2;
+     set weather (where=(rain ne 0 & rain ne .));
+run;
+```
+
+There are a few things to unpack from the above example:
+
+1. Notice the syntax of the **WHERE** option; there are parentheses both before the keyword **WHERE** and also before the actual logical clause being used with the **WHERE** option. These parentheses are separated by an equals sign (=).
+
+2. **WHERE** options naturally work with logical operators. These are generally intuitive and we won't walk through these in detail - [here](https://v8doc.sas.com/sashtml/lrcon/z0780367.htm "SAS Operators") is a very nice reference for logical operators (and others) in SAS. 
+    + As the above reference mentions, comparison operators can be expressed as symbols or with their mnemonic equivalents in SAS (ne is the mnemonic equivalent of ^= in SAS, for example, which both mean "not equal")
+    
+3. Notice the . in the data from the above example; *this represents a missing value in SAS*. Handling missing values is a very common and important task is practice. 
+
+There are alternative ways to subset the observations in your data in SAS. [Here](http://support.sas.com/documentation/cdl/en/lestmtsref/63323/HTML/default/viewer.htm#p1cxl8ifdt8u0gn12wqbji8o5fq1.htm "IF Statment") is an example of the **IF statement** for use in subsetting data. I intend to use the **WHERE option** throughout this class, but it's always important to be aware of the many ways to do the same tasks in any programming language. 
+
+### 2.2.3 KEEP and DROP Statements
+
+It is also often of interest to either keep or drop columns (i.e. variables) from a particular dataset. The **KEEP statement** can be used within a **DATA step** to specify which variables of the dataset should be kept in the output dataset. Conversely, the **DROP statement** is used within a **DATA step** to specify which variables of the dataset should be dropped in the output dataset. 
+
+[Here](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000202978.htm "KEEP Statement") is the SAS documentation on the **KEEP statement**, and [here](http://support.sas.com/documentation/cdl/en/lrdict/64316/HTML/default/viewer.htm#a000202902.htm "DROP Statement") is the SAS documentation on the **DROP statement**.
+
+The example below illustrates how **KEEP** and **DROP** can be used interchangeably to achieve the same outcome - whichever statement is most convenient makes the most sense to use. 
+
+```{code}
+data grades;
+     input student $ stats prob statcomp dataviz;
+cards;
+Joy 98 97 100 96
+Alan 83 87 93 89
+Peter 100 100 100 100
+Alicia 90 90 86 80
+;
+run;
+
+* use KEEP to keep student, stats, and statcomp;
+data grades_v1;
+     set grades;
+     keep student stats statcomp;
+run;
+
+* use DROP to remove prob and dataviz;
+data grades_v2;
+     set grades;
+     drop prob dataviz;
+run;
+
+* use the : functionality to keep all variables beginning with 's';
+data grades_v3;
+     set grades;
+     keep s:;
+run;
+```
+Notice the final **DATA step** in the above example; using the colon (**:**) after a set of characters (in this case, 's') will perform the SAS statement on all variables that share the common prefix. 
+
+### 2.2.4 IF THEN ELSE Statements
+
+Within a **DATA step**, **IF THEN ELSE statements** can be used to conditionally execute SAS statements based upon the values of some variable in the SAS dataset. For example, a new variable can be created and its value assigned based upon the value of some other, existing variable. 
+
+The below example illustrates the flexibility of the **IF THEN ELSE** statement in SAS.
+
+```{code}
+** if then else statement with no else if condition;
+data grades_pass1;
+     set grades;
+     if statcomp > 90 then statcomp_A = 1;
+     else statcomp_A = 0;
+run;
+
+** if then else statement with an else if condition;
+data grades_pass2;
+     set grades;
+     if statcomp > 90 then statcomp_grade = 'A';
+     else if statcomp > 80 then statcomp_grade = 'B';
+     else statcomp_grade = 'C';
+run;
+
+** if then else statement with multiple conditions and a do statement;
+data grades_pass3;
+     set grades;
+
+     if statcomp > 90 & stats > 90 then do;
+           statcompA = 1;
+           statA = 1;
+     end;
+
+     else if statcomp > 90 & stats <= 90 then do;
+           statcompA = 1;
+           statA = 0;
+     end;
+
+     else if statcomp <= 90 & stats > 90 then do;
+           statcompA = 0;
+           statA = 1;
+     end;
+
+     else do;
+           statcompA = 0;
+           statA = 0;
+     end;
+run;
+```
+
+As the **DATA** step above that creates the *grades_pass3* dataset illustrates, a **DO** statement can be used with if-then-else logic to execute a block of SAS code for each branch of the **IF THEN ELSE** statement. 
+
+## 2.3 Basic SAS PROCs
+
+### 2.3.1 PROC PRINT
+
+**PROC PRINT** is used to print a SAS dataset to the results window. This can be very helpful for viewing your dataset. **A note of caution:** printing very large datasets can cause issues in various SAS IDEs.
+
+[Here](http://support.sas.com/documentation/cdl/en/proc/61895/HTML/default/viewer.htm#a002291718.htm "SAS PROC PRINT") is the SAS documentation on **PROC PRINT**. [Here](http://www.stat.wvu.edu/~abilling/STAT521_ProcPRINT.pdf "WVU PROC PRINT") is a perhaps more readable guide to using **PROC PRINT** from West Virginia University. 
+
+The general syntax of **PROC PRINT** that I use in practice and that will be sufficient for this course is illustrated below:
+
+```{code}
+proc print data=dataset_name;
+    var varname1 varname2 ... varnameN; /* specify which variables to print */
+run;
+
+```
+
+Note that the entire set of variables in the dataset (i.e. *dataset_name* above) will be printed if the **VAR statement** is omitted from **PROC PRINT**. 
+
+### 2.3.2 PROC SORT
+
+**PROC SORT** is used to sort a SAS dataset by one or more variables contained in the dataset. Variables can be either numeric or character variables. [Here](http://support.sas.com/documentation/cdl/en/proc/61895/HTML/default/viewer.htm#sort-overview.htm "PROC SORT Overview") is an overview of **PROC SORT** provided by SAS. 
+
+There are several items worth noting about **PROC SORT**:
+
+1. If the **OUTPUT** statement is not included, **PROC SORT** will overwrite the SAS dataset passed to the procedure with the sorted version of the same dataset.
+
+2. **PROC SORT** defaults to sorting in ascending order, although descending order can also be achieved with the appropriate syntax.
+
+3. It is possible to sort by multiple variables; in such cases, the data is first sorted by the first sort variable, then sorted by the second sort variable for all observations with a common first sort variable, and so on. 
+
+The above concepts are best illustrated via an example. 
+
+```{code}
+data grand_slams;
+     format name $10.;
+     input name $ sex $ wins;
+cards;
+Federer M 20
+Nadal M 19
+Djokovic M 16
+Sampras M 14
+Court F 24
+Williams F 23
+Graf F 22
+Evert F 18
+;
+run;
+
+proc print; run; /* SAS defaults to last created dataset if not specified */
+
+* sort by titles from least to most;
+proc sort data=grand_slams;
+     by wins;
+run;
+
+proc print data=grand_slams; run;
+
+* sort by most titles to least and do not overwrite dataset;
+proc sort data=grand_slams out=grand_slams_desc;
+     by descending wins;
+run;
+
+proc print; run;
+
+* sort by sex, then wins (in descending order), and create a new dataset;
+proc sort data=grand_slams out=grand_slams_final;
+     by sex descending wins;
+run;
+
+proc print; run;
+```
+
+Note that 'F' comes before 'M' when sorting by *sex* in the above example, illustrating that characters coming earlier in the alphabet are less than characters coming later in the alphabet when sorting. 
+
+### 2.3.3 PROC CONTENTS
+
+**PROC CONTENTS** is used to view metadata, or data about data, of a SAS dataset. [Here](https://documentation.sas.com/?cdcId=vdmmlcdc&cdcVersion=1.0&docsetId=proc&docsetTarget=n1a5k5u51pvnlhn17j9v82nciokh.htm&locale=en "PROC CONTENTS Overview") is an overview of **PROC CONTENTS** provided by SAS. 
+
+Some of the information provided by **PROC CONTENTS** includes:
+
+  + The number of observations (rows) and variables (columns) contained in the dataset. 
+  + The date and time when the SAS dataset was both created and last modified.
+  + The data type of each variable in the SAS dataset. 
+
+The above concepts are illustrated below via an example. 
+
+```{code}
+data grand_slams;
+     format name $10.;
+     input name $ sex $ wins;
+cards;
+Federer M 20
+Nadal M 19
+Djokovic M 16
+Sampras M 14
+Court F 24
+Williams F 23
+Graf F 22
+Evert F 18
+;
+run;
+
+proc contents data = grand_slams;
+run;
+```
+
+### 2.3.4 PROC DATASETS
+
+**PROC DATASETS** is another "utility" procedure used to manage SAS datasets. [Here](https://support.sas.com/documentation/cdl/en/proc/61895/HTML/default/viewer.htm#datasets-overview.htm "PROC DATASETS Overview") is an overview of **PROC DATASETS** provided by SAS. 
+
+While all of the **PROC DATASETS** use cases can be helpful, a few particulary useful use cases include:
+
+  + Copying SAS datasets from one library to another
+  + Renaming a SAS dataset
+  + Deleting SAS datasets 
+
+The above concepts are illustrated below via an example. 
+
+```{code}
+libname new_lib 'C:\Users\wolfeax\documents\Lecture1';
+
+* copy SAS datasets in WORK library to new_lib library;
+proc datasets;
+   copy in=WORK out=new_lib;
+run;
+
+data t1;
+  do i = 1 to 10;
+    output;
+  end;
+run;
+
+* rename t1 dataset as t2;
+proc datasets library=work;
+   change t1=t2;
+run;
+
+* delete work.t2 dataset;
+proc datasets library=work;
+   delete t2;
+run;
+```
+
+### 2.3.5 PROC IMPORT and PROC EXPORT
+
+In practice, you are not typically going to be creating a SAS dataset within SAS. Rather, you are likely going to be sourcing from an existing file. Such files may be in many different formats. Finally, you may want to output your SAS dataset into another format (such as CSV). We will now address these fundamental tasks. 
+
+**PROC IMPORT** is the SAS procedure for importing external data into a SAS dataset. [Here](http://support.sas.com/documentation/cdl/en/proc/61895/HTML/default/viewer.htm#a000308090.htm "PROC IMPORT") is SAS's documentation on **PROC IMPORT**. 
+
+**PROC EXPORT** is the SAS procedure for exporting external data into a SAS dataset. [Here](https://support.sas.com/documentation/cdl/en/proc/61895/HTML/default/viewer.htm#a000316288.htm "PROC EXPORT") is SAS's documentation on **PROC EXPORT**. 
+
+**Let's practice using these two PROCs with an in-class example. **
