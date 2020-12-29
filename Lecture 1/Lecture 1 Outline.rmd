@@ -1,0 +1,22 @@
+---
+title: "Lecture 1 Outline - January 16, 2021"
+output: html_document
+---
+
+1. Welcome and Introduction
+
+2. Syllabus Review
+
+3. Lecture 1.1 Getting Started in SAS
+
+4. Lecture 1.2 Basics of SAS
+
+5. Begin Assignment #1 [if time allows]
+  
+**Breaks:** Four hours of lecture is a long time. We'll take two 10 minute breaks as follows:
+
+* Break 1: 2:15-2:25
+
+* Break 2: 3:40-3:50
+
+Please be on time coming back from breaks - I don't intend to wait for people to continue the lecture. If you are going to be late, please be respectful when you come back to the classroom. 
